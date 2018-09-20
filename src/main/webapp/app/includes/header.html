@@ -1,0 +1,44 @@
+<header class="top_header" id="home" ng-controller="UserController">
+        <!-- Fixed navbar -->
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="nav_top_fx_w3ls_agileinfo container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <div class="logo-w3layouts-agileits">
+                        <h1> <a class="navbar-brand" href="#!/app/home"><i class="fa fa-clone" style="color:#fff;" aria-hidden="true"></i> Logo</a></h1>
+                    </div>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse" ng-if="showNavigationLinks">
+                    <div class="nav_right_top">
+                        <ul class="nav navbar-nav">
+                            <li><a ng-click="display=false" href="#!/app/home">Home</a></li>
+							<li><a ng-click="display=false" >Bookmarks</a></li>
+							<!-- <li><a href="#!/app/list/content">List</a></li> -->
+							<li><a ng-click="display=true">List</a>
+							<div ng-if="display==true" style=" position: absolute;background-color: #d06627;width:200px;">
+								<ul >
+									<li><a href="#!/app/list/accomodation">Accomodation</a></li>
+									<li><a href="#!/app/list/meals">Meals</a></li>
+									<li><a href="#!/app/list/jobs">Jobs</a></li>
+									<li><a href="#!/app/list/coachingAds">Coaching Ads</a></li>
+									<li><a href="#!/app/list/statutes">Statutes</a></li>
+								</ul>	
+							</div>
+							</li>
+                           <!--  <li><a ng-click="display=false" href="#!/app/login">SignIn</a></li>
+                            <li><a ng-click="display=false" href="#!/app/signup">Signup</a></li>  -->
+                            <li><a ng-click="display=false" href="#!/app/my-account">My Account</a></li>
+                            <li><a ng-click="display=false" href="#!/app/upload">Upload</a></li>
+                            <li><a ng-click="display=false" href="#!/app/logout">Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </nav>
+    </header>

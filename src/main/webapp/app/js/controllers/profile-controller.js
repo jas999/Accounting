@@ -1,0 +1,245 @@
+var coverImageFile = null;
+function onSelectCoverImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            
+            reader.onload = function (e) {
+                $('#cover-img-tag').attr('src', e.target.result);
+            }
+            
+            coverImageFile = input.files[0];
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+var contetFile = null;
+function onSelectContentFile(input) {
+    if (input.files && input.files[0]) {
+    	contetFile = input.files[0];
+    }
+}
+angular.module("accounting").controller('ProfileController',function($scope, ProfileService) {
+	$scope.emailFormat = /^[a-z]+[a-z0-9._]+@[a-z]+\.[a-z.]{2,5}$/;
+	$scope.createDocument = function(document) {
+		var validateResponse = ProfileService.validateDocument(document);
+		if (!validateResponse['valid']) {
+			toastr["error"](validateResponse.message);
+			return;
+		}
+	}
+	
+	$scope.isCategorySelected = function(document) {
+		if (!document.categoryId) {
+			toastr["error"]("Please select category.");
+			document.categorySubId = '';
+			return false;
+		}
+	}
+	
+	$scope.myAccountInit = function() {
+		$scope.myAccountData = {};
+		$scope.loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+		$scope.myAccountDataRequest();
+	}
+	
+	$scope.myAccountDataRequest = function() {
+		ProfileService.getMyAccountData($scope.loggedInUser.userId).then(function(response){
+			console.log(response.data);
+			if (response.data) {
+				$scope.myAccountData = response.data;
+				$scope.findSubCategoriesByParentId($scope.myAccountData.mainCourseId);
+			} 
+			$scope.findAllCategories();
+		},function(error){
+			console.log(error);
+		});
+		if (!$scope.$$phase) $scope.$apply();
+	}
+	
+	$scope.showSelectedCategory = function(cat,myAccountData) {
+		setTimeout(function(){
+			return (cat.profileCategoryId == myAccountData.mainCourseId);
+		},4000);
+	}
+	
+	$scope.showSelectedCity = function(city,myAccountData) {
+		setTimeout(function(){
+			return (city.id == myAccountData.accountCityId);
+		},4000);
+	}
+	
+	$scope.showSelectedCityWhileUpload = function(city,userDocument) {
+		setTimeout(function(){
+			return (city.id == userDocument.uploadCityId);
+		},4000);
+	}
+	
+	$scope.findAllCategories = function() {
+		ProfileService.findAllCategories().then(function(response) {
+			console.log(response.data);
+			$scope.categories = response.data;
+		},function(error){console.log(error);});	
+	}
+	
+	$scope.findSubCategoriesByParentId = function(parentCategoryId) {
+		console.log(parentCategoryId);
+		$scope.subCategories =[];
+		for(idx in parentCategoryId){
+			ProfileService.findSubCategoriesByCategoryId(parentCategoryId[idx]).then(function(response) {
+				for(subIdx in response.data){
+					$scope.subCategories.push(response.data[subIdx]);	
+				}
+			},function(error){console.log(error);});		
+		}
+		
+	}
+	
+	$scope.saveMyaccount = function(myAccountData) {
+		console.log(myAccountData);
+		myAccountData['createdById'] = $scope.loggedInUser.userId;
+		myAccountData.mainCourseId = myAccountData.mainCourseId.toString();
+		myAccountData.secondryCourseId = myAccountData.secondryCourseId.toString();
+		myAccountData.accountCityId = myAccountData.accountCityId.toString();
+		 
+		var myAccounts = [];
+		myAccounts.push(myAccountData);
+		
+		$scope.loggedInUser['myAccounts'] = myAccounts;
+		
+		ProfileService.saveMyAccountData($scope.loggedInUser).then(function(response) {
+			console.log(response.data);
+			var myAccounts = [];
+			myAccounts.push(response.data.data.myAccounts[0]);
+			$scope.loggedInUser.myAccounts = myAccounts;
+			localStorage.setItem("loggedInUser", JSON.stringify($scope.loggedInUser));
+			window.location.href = "#!/app/home"
+		},function(error){console.log(error);});	
+	}
+	
+	/************* Upload Content Screen ***********/
+	
+	$scope.uploadInit = function() {
+		$scope.userDocument = {};
+		$scope.loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+		$scope.findAllCategories();
+	}
+	
+	$scope.saveFinalDocument = function(userDocumentData) {
+		userDocumentData.uploadCityId = userDocumentData.uploadCityId.toString();
+		$scope.userDocument = userDocumentData;
+		
+		if(typeof($scope.userDocument.serviceSelected) == 'undefined' || $scope.userDocument.serviceSelected == "-1"){
+			toastr["error"]("Please select Service");
+			return;
+		}
+		if($scope.userDocument.serviceSelected == 'others'){
+			if (!$scope.userDocument.categoryId) {
+				toastr["error"]("Please select Main Course");
+				return;
+			}
+			if (!$scope.userDocument.subCategoryId) {
+				toastr["error"]("Please select Secondary Course");
+				return;
+			}
+			if ($scope.userDocument.containsVideo && !$scope.userDocument.videoLink) {
+				toastr["error"]("Please paste video link");
+				return;
+			}
+		}
+		
+		if (!$scope.userDocument.title) {
+			toastr["error"]("Please enter title");
+			return;
+		}
+		if (!coverImageFile) {
+			toastr["error"]("Please upload Cover Image");
+			return;
+		}
+		if (coverImageFile) {
+			$scope.uploadCoverImage();
+		}
+	}
+	
+	$scope.uploadCoverImage = function() {
+        var data = new FormData();
+        data.append("mediaFile", coverImageFile);
+        data.append("userId", $scope.loggedInUser.userId);
+		
+        $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url: "/save/coverimage",
+            data: data,
+            processData: false,
+            contentType: false,
+            cache: false,
+            timeout: 600000,
+            success: function (data) {
+                console.log("SUCCESS : ", data);
+                $scope.userDocument['coverImageUrl'] = data.coverImageUrl;
+                
+                if (contetFile) {
+                	$scope.uploadContentFile();
+                    
+                } else {
+                	$scope.saveUserDocument($scope.userDocument);
+                }
+                
+            },
+            error: function (e) {
+                console.log("ERROR : ", e);
+            }
+        });
+	}
+	
+	$scope.uploadContentFile = function() {
+		
+        var data = new FormData();
+        data.append("mediaFile", contetFile);
+        data.append("userId", $scope.loggedInUser.userId);
+		
+        $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url: "/save/coverimage",
+            data: data,
+            processData: false,
+            contentType: false,
+            cache: false,
+            timeout: 600000,
+            success: function (data) {
+                console.log("SUCCESS : ", data);
+                $scope.userDocument['contentLinkUrl'] = data.coverImageUrl;
+                $scope.saveUserDocument($scope.userDocument);
+            },
+            error: function (e) {
+                console.log("ERROR : ", e);
+            }
+        });
+	}
+	
+	$scope.saveUserDocument = function(userDocumentData) {
+				
+		userDocumentData['createdById'] = $scope.loggedInUser.userId;
+		ProfileService.saveUserDocument(userDocumentData).then(function(response) {
+			console.log(response.data);
+			window.location.href = "#!/app/home"
+		},function(error){console.log(error);});	
+	}
+	
+	$scope.containsVideoFun = function(containsVideo) {
+		$scope.userDocument.containsVideo = containsVideo;
+	}
+	
+	$scope.allCities = function() {
+		ProfileService.getAllCities().then(function(response) {
+			$scope.cities = response.data;
+		});
+	}
+	
+	$scope.allCities();
+	
+	$scope.logoutApp = function(){
+		window.localStorage.removeItem("loggedInUser");
+		window.location.href = "#!/app/login";
+	}
+});

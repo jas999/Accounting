@@ -1,0 +1,8 @@
+auto.sync=false
+build.scans.enabled=false
+connection.gradle.distribution=GRADLE_DISTRIBUTION(LOCAL_INSTALLATION(D\:\\softwares\\gradle-2.3))
+connection.project.dir=
+eclipse.preferences.version=1
+gradle.user.home=/home/jaspreet/A_Drive/softwares/java_software/Gradle1.11/gradle-1.11-bin/gradle-1.11
+offline.mode=false
+override.workspace.settings=true

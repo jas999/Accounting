@@ -1,0 +1,147 @@
+<div ng-controller="ProfileController" ng-init="myAccountInit()">
+	<div class="banner-images">
+		<img src="app/images/banner-01.png" alt="" class="full-width" />
+		<div class="overlay-banner">
+			<div class="profile-img"><img src="app/images/t1.jpg" alt="" class="img-circle full-width" /></div>
+			<div class="profile-name">{{loggedInUser.firstName}} {{loggedInUser.lastName}}</div>
+			<div class="profile-email"><a href="javascript:void(0);">{{loggedInUser.email}}</a></div>
+		</div>
+	</div>
+	<section class="content-zone white-bg">
+	<div class="container">
+			<h1 class="tittle-w3ls text-center">My Account</h1><br clear="all" /><br />
+			
+			<div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 myaccount">
+			<form name="accountForm" ng-submit="saveMyaccount(myAccountData)">
+			<div class="row">		
+				<div class="col-md-6 col-sm-6 col-xs-12">	
+					<div class="form-group">
+						<label>Main Course</label>
+						<div class="custom-select">
+							<select class="form-control" multiple required ng-model="myAccountData.mainCourseId" ng-change="findSubCategoriesByParentId(myAccountData.mainCourseId)"  style="height: 150px;">
+								<option value="{{cat.profileCategoryId}}" ng-repeat="cat in categories" ng-selected="showSelectedCategory(cat,myAccountData)">{{cat.name}}</option>
+								
+							</select>
+						</div>
+					</div>
+				</div>	
+				<div class="col-md-6 col-sm-6 col-xs-12">	
+					<div class="form-group">
+						<label>Secondary Course</label>
+						<div class="custom-select">
+							<select class="form-control" multiple required ng-model="myAccountData.secondryCourseId" style="height: 150px;">
+								<option value="{{subCat.profileCategoryId}}" ng-repeat="subCat in subCategories">{{subCat.name}}</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+			<br clear="all" /><br />
+			<div class="row">	
+				<div class="col-md-6 col-sm-6 col-xs-12">	
+					<div class="form-group">
+						<label>Mobile Number</label>
+						<input type="number" class="form-control" value="" placeholder="Mobile Number" name="mobilenumber" required ng-model="loggedInUser.phone" ng-maxlength="10"/>
+						<span class="error" ng-if="!accountForm.mobilenumber.$valid" style="color:red">Please Enter 10 digit number</span>
+					</div>
+				</div>
+				<div class="col-md-6 col-sm-6 col-xs-12 border-bottom-1">	
+					<label>Email Address</label>
+					 <div class="form-group">
+						<input name="email" type="text" class="form-control" value="" placeholder="Email Address" required ng-model="loggedInUser.email" ng-pattern="emailFormat"/>
+					<span class="error" ng-show="accountForm.email.$error.required" style="color:red">Required!</span>
+					<span class="error" ng-show="accountForm.email.$error.pattern" style="color:red">Not valid email!</span>
+					</div>
+				</div>
+				
+				
+			</div>
+			
+			<div class="row">	
+			<div class="col-md-12 col-sm-12 col-xs-12 border-bottom-1">	
+					<label>City</label>
+				<!-- 	 <div class="form-group">
+						<input type="text" class="form-control" value="" placeholder="City" required ng-model="loggedInUser.city"/>
+					</div> -->
+					<div class="custom-select">
+							<select class="form-control" multiple required ng-model="myAccountData.accountCityId" style="height: 150px;">
+								<option value="{{city.id}}" ng-repeat="city in cities" ng-selected="showSelectedCity(city,myAccountData)">{{city.name}}</option>
+								
+							</select>
+						</div>
+				</div>
+				
+			</div>
+			<div class="row">
+			
+				<div class="col-md-6 col-sm-6 col-xs-12 toggle-box">	
+						<label>Subscribe to Newsletters</label>
+				</div>
+				<div class="col-md-6 col-sm-6 col-xs-12 toggle-box">	
+						<label class="switch"><input id="toggle-one" data-toggle="toggle" data-onstyle="success" data-offstyle="info" type="checkbox" ng-model="myAccountData.newsLetterSubscribed"><span class="slider round"></span></label>
+				</div>
+			
+				<div class="col-md-6 col-sm-6 col-xs-12 toggle-box">	
+						<label>Receive Notification</label>
+				</div>
+				<div class="col-md-6 col-sm-6 col-xs-12 toggle-box">	
+					<label class="switch"><input id="toggle-two" data-toggle="toggle" data-onstyle="success" data-offstyle="info" type="checkbox" ng-model="myAccountData.notificationOn"><span class="slider round"></span></label>	
+				</div>
+				
+				<div class="col-md-6 col-sm-6 col-xs-12 toggle-box">	
+						<label>Accomodation</label>
+				</div>
+				<div class="col-md-6 col-sm-6 col-xs-12 toggle-box">	
+					<label class="switch"><input id="toggle-three" data-toggle="toggle" data-onstyle="success" data-offstyle="info" type="checkbox" ng-model="myAccountData.accomodationTaken"><span class="slider round"></span></label>
+				</div>
+
+				<div class="col-md-6 col-sm-6 col-xs-12 toggle-box">	
+						<label>Meals</label>
+				</div>
+				<div class="col-md-6 col-sm-6 col-xs-12 toggle-box">	
+					<label class="switch"><input id="toggle-four" data-toggle="toggle" data-onstyle="success" data-offstyle="info" type="checkbox" ng-model="myAccountData.mealTaken"><span class="slider round"></span></label>
+				</div>
+				
+				<div class="col-md-6 col-sm-6 col-xs-12 toggle-box">	
+						<label>Jobs</label>
+				</div>
+				<div class="col-md-6 col-sm-6 col-xs-12 toggle-box">	
+					<label class="switch"><input id="toggle-five" data-toggle="toggle" data-onstyle="success" data-offstyle="info" type="checkbox" ng-model="myAccountData.jobsOn"><span class="slider round"></span></label>
+				</div>
+				
+				<div class="col-md-6 col-sm-6 col-xs-12 toggle-box">	
+						<label>Coaching Ads</label>
+				</div>
+				<div class="col-md-6 col-sm-6 col-xs-12 toggle-box">	
+					<label class="switch"><input id="toggle-one" data-toggle="toggle" data-onstyle="success" data-offstyle="info" type="checkbox" ng-model="myAccountData.coachingAdsOn"><span class="slider round"></span></label>
+				</div>
+				
+				
+				<div class="col-md-6 col-sm-6 col-xs-12 toggle-box">	
+						<label>Statutes</label>
+				</div>
+				<div class="col-md-6 col-sm-6 col-xs-12 toggle-box">	
+					<label class="switch"><input id="toggle-one" data-toggle="toggle" data-onstyle="success" data-offstyle="info" type="checkbox" ng-model="myAccountData.statutesOn"><span class="slider round"></span></label>
+				</div>
+				
+				<div class="col-md-6 col-sm-6 col-xs-12 toggle-box">	
+						<label>Test Series</label>
+				</div>
+				<div class="col-md-6 col-sm-6 col-xs-12 toggle-box">	
+					<label class="switch"><input id="toggle-one" data-toggle="toggle" data-onstyle="success" data-offstyle="info" type="checkbox" ng-model="myAccountData.statutesOn"><span class="slider round"></span></label>
+				</div>
+				
+			</div>
+						<br clear="all" /><br />
+		
+			<div class="row">		
+				<div class="col-md-12 col-sm-12 col-xs-12 text-center">
+					<button class="btn btn-theme" type="submit">SUBMIT<i class="fa fa-arrow-right"></i></button>
+				</div>
+			</div>
+			</form>
+		</div>
+		</div>
+	</section>
+ </div>

@@ -1,0 +1,22 @@
+<div ng-controller="UserController" ng-init="fetchAllUsers();">
+	<div class="container">
+		<form class="form-inline"  id="upload-banner-form" ng-submit="uploadBanner()">
+			<h3>Upload Banner</h3> 
+			<div class="form-group padding" style="margin-top:20px;">
+				<input type="file" onchange="onSelectBannerImage(this)" required>
+			</div>
+			<button type="submit" class="btn btn-default" style="margin-top:20px;">Submit</button>
+		</form>
+	</div>
+	
+	<table class="specialAccount">
+		<th>UserName</th>
+		<th>Email</th>
+		<th>Special Account</th>
+		<tr ng-repeat="x in users">
+			<td>{{x.firstName}}</td>
+			<td>{{x.email}}</td>
+			<td><input type="checkbox" value="x.specialAccount" ng-model = "x.specialAccount" ng-change="updateSpecialAccount(x.userId,x.specialAccount);">{{x.specialAccount}}</td>
+		</tr>
+	</table>
+</div>

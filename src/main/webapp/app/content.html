@@ -1,0 +1,160 @@
+<div ng-controller="DocumentController" ng-init="initContentPage()">
+    <div id="loader-container" style="display:none;">
+    	<div id="loader" ></div>
+    </div>
+    <section class="content-zone white-bg">
+        <section class="video-description content-desc">
+            <section class="container">
+                <h3 class="tittle-w3ls">Documents</h3>
+                <input class="search-input" type="text" ng-model="searchTitle" ng-keyup="loadDocumentsByTitle(searchTitle)" placeholder="Search"/>
+                <section class="row divider">
+                	<div ng-if="contents.length == 0">
+                		<h2>No Content Available</h2>
+                	</div>
+                	<div ng-if="contents.length > 0">
+                    <section class="col-lg-6 col-md-6 col-sm-6 col-xs-12" ng-repeat="content in contents">
+                        <section class="media">
+                            <section class="media-left">
+                                <img src="{{content.coverImageUrl}}" class="media-object" width="200">
+                            </section>
+                            <section class="media-body">
+                                <h4 class="media-heading">{{content.title}}</h4>
+                                <p>{{content.content.substr(0,100)}} <a href="javascript:void(0);" ng-click="openDescModal(content,'content')"> Read More</a></p>
+                                
+                                <div class="share-section">
+                                	<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+									  Launch demo modal
+									</button> -->
+                                	<a class="border-btn" data-toggle="modal" ng-click="openRatingModal(content)">Rate</a>
+                                	<img src="app/images/attachment.png" ng-click="openContentInListPage(content,'attachment')" style="height:30px;margin-left:10px;"/>
+                                    <ul class="share-icons-list">
+                                    	<li><a href="javascript:void(0);"><i class="fa fa-share-alt" aria-hidden="true"></i></a></li>
+                                        <li><a ng-click="toggleBookmark(content)" href="javascript:void(0);"><i class="fa fa-heart-o" aria-hidden="true"></i></a></li>
+                                        <li><a ng-click="openCommentModal()"  href="javascript:void(0);"><i class="fa fa-comment-o" aria-hidden="true"></i></a></li>
+                                        <li><a ng-click="openCommentListModal(content.userDocumentId)"href="javascript:void(0);"><i class="fa  fa-comments" aria-hidden="true"></i></a></li>
+                                    </ul>
+                                </div>
+                            </section>
+                        </section>
+                        <!-- Modal -->
+						<div class="modal" id="rating-modal" tabindex="-1"
+							role="dialog" aria-labelledby="exampleModalLabel"
+							aria-hidden="true">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h3 class="modal-title" id="exampleModalLabel"><strong>Rate This</strong></h3>
+										<button type="button" class="close" data-dismiss="modal"
+											aria-label="Close" ng-click="closeRatingModal()">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="row modal-body">
+										<div class=col-sm-12><h3>Overall Rating: {{document.overallRating == null ? 0 : document.overallRating}}</h3></div>
+										<div class=col-sm-12>
+	        								<div ng-repeat="rating in ratings">
+	        									<h3>{{rating.current}} / {{rating.max}}</h3>
+	            								<div star-rating rating-value="rating.current" max="rating.max" 
+	            									on-rating-selected="getSelectedRating(rating)"></div>
+	        								</div>
+	    								</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary"
+											data-dismiss="modal" ng-click="closeRatingModal()">Close</button>
+										<button type="button" class="btn btn-primary" ng-click="saveRating(content.userDocumentId)">Save
+											changes</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+								
+						<!-- Comment Modal -->
+						<div class="modal" id="comment-modal" tabindex="-1"
+							role="dialog" aria-labelledby="exampleModalLabel"
+							aria-hidden="true">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+									<h3 class="modal-title" id="exampleModalComment"><strong>Type your comments</strong></h3>
+										<button type="button" class="close" data-dismiss="modal"
+											aria-label="Close" ng-click="closeCommentModal()">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="row modal-body">
+										<textarea ng-model="documentComment.comment" class="form-control" style="min-width: 100%"></textarea>
+										<div class=col-sm-12>
+	        								<div>
+	        									
+	        								</div>
+	    								</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary"
+											data-dismiss="modal" ng-click="closeCommentModal()">Close</button>
+										<button type="button" class="btn btn-primary" ng-click="saveDocumentComment(content.userDocumentId)">Save
+											changes</button>
+									</div>
+								</div>
+							</div>
+						</div>	
+						
+				
+						
+                    </section>
+					</div>
+					
+							<!-- Comment List Modal -->
+						<div class="modal" id="comment-list-modal" tabindex="-1"
+							role="dialog" aria-labelledby="exampleModalLabel"
+							aria-hidden="true">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+									<h3 class="modal-title" id="exampleModalComment"><strong>User Document Comments</strong></h3>
+										<button type="button" class="close" data-dismiss="modal"
+											aria-label="Close" ng-click="closeCommentListModal()">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="row modal-body">
+										<ul ng-repeat="comment in documentComments"><li>{{comment.comment}}</li></ul>
+										<div class=col-sm-12>
+	        								<div>
+	        									
+	        								</div>
+	    								</div>
+									</div>
+									
+								</div>
+							</div>
+						</div>
+					
+					<!--  Description Modal -->
+						<div class="modal desc-modal" role="dialog">
+						  <div class="modal-dialog" role="document">
+						    <div class="modal-content">
+						      <div class="modal-header">
+						        <h5 class="modal-title">{{document.title}}</h5>
+						        <button type="button" class="close" data-dismiss="modal" ng-click="closeDescModal()" aria-label="Close">
+						          <span aria-hidden="true">&times;</span>
+						        </button>
+						      </div>
+						      <div class="modal-body">
+						        <p>{{document.content}}</p>
+						      </div>
+						      <div class="modal-footer">
+						        <button type="button" class="btn btn-secondary" data-dismiss="modal" ng-click="closeDescModal()">Close</button>
+						      </div>
+						    </div>
+						  </div>
+						</div>
+				
+               
+                </section>
+            </section>
+        </section>
+    </section>
+  </div>

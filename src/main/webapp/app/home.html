@@ -1,0 +1,181 @@
+<div ng-controller="DocumentController" ng-init="initHomePage()">
+	<div id="loader" style="display:none;"></div>
+    <!-- banner -->
+   <!-- banner -->
+	 <section id="demos" class="content-zone white-bg">
+		
+        <div class="container">
+			<!-- <h2 class="main-headline">Latest Video</h2><br clear="all" /> -->
+			<input class="search-input" type="text" ng-model="searchTitle" ng-keyup="loadDocumentsByTitle(searchTitle)" placeholder="Search"/>
+            <div class="owl-carousel owl-theme" id="carousal-1">
+                <div class="item">
+                    <img src="app/images/banner-001.jpg" alt="" class="img-responsive" />
+                </div>
+                <div class="item">
+                    <img src="app/images/banner-001.jpg" alt="" class="img-responsive" />
+                </div>
+                <div class="item">
+                    <img src="app/images/banner-001.jpg" alt="" class="img-responsive" />
+                </div>
+                <div class="item">
+                    <img src="app/images/banner-001.jpg" alt="" class="img-responsive" />
+                </div>
+                <div class="item">
+                    <img src="app/images/banner-001.jpg" alt="" class="img-responsive" />
+                </div>
+                <div class="item">
+                    <img src="app/images/banner-001.jpg" alt="" class="img-responsive" />
+                </div>
+                <div class="item">
+                    <img src="app/images/banner-001.jpg" alt="" class="img-responsive" />
+                </div>
+                <div class="item">
+                    <img src="app/images/banner-001.jpg" alt="" class="img-responsive" />
+                </div>
+                <div class="item">
+                    <img src="app/images/banner-001.jpg" alt="" class="img-responsive" />
+                </div>
+                <div class="item">
+                    <img src="app/images/banner-001.jpg" alt="" class="img-responsive" />
+                </div>
+                <div class="item">
+                    <img src="app/images/banner-001.jpg" alt="" class="img-responsive" />
+                </div>
+            </div>
+
+             
+        </div>
+    </section>
+   
+	<!--//banner -->    <!--//banner -->
+
+    <section class="content-zone">
+            <section class="image-section">
+                <h2 class="main-headline">Image Headline</h2>
+                <section id="demos">
+					<div ng-if="images.length == 0">
+						<h3>No Content</h3>
+					</div>
+                    <div class="owl-carousel owl-theme" id="carousal-2" ng-if="images.length > 0">
+                        <div ng-repeat="image in images" ng-click="openContent(image)">
+	                        <div class="item">
+	                    		<img src="{{image.coverImageUrl}}"  alt="" class="img-responsive" />
+	                		</div>
+	                		<div class="title"><p>{{image.title}}</p></div>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 text-center" ng-if="images.length > 0">
+                        <a class="btn btn-theme" href="#!app/list/content"><i class="fa fa-eye"></i> View all</a>
+                    </div>
+
+                </section>
+            </section>
+
+            <section class="video-section">
+                <h2 class="main-headline">Video Headline</h2>
+                <section id="demos">
+					<div ng-if="videos.length == 0">
+						<h3>No Content</h3>
+					</div>
+                    <div class="owl-carousel owl-theme" id="carousal-3" ng-if="videos.length > 0">
+	                     <div ng-repeat="video in videos" ng-click="openContent(video)">
+	                        <div class="item">
+	                            <img src="{{video.coverImageUrl}}" alt="" class="img-responsive" />
+	                        </div>
+	                        <div class="title"><p>{{video.title}}</p></div>
+	                    </div>    
+                    </div>
+
+                    <div class="col-xs-12 text-center" ng-if="videos.length > 0">
+                        <a class="btn btn-theme" href="#!/app/list/video"><i class="fa fa-eye"></i> View all</a>
+                    </div>
+
+                </section>
+            </section>
+    </section>
+    
+   
+
+		<!-- Modal -->
+		<div id="myModal" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Modal Header</h4>
+					</div>
+					<div class="modal-body">
+						<p>Some text in the modal.</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+
+    <section class="content-zone white-bg">
+        <section class="video-description">
+            <section class="container">
+                <h2 class="main-headline">Content Section</h2>
+                <section class="row">
+                 <div ng-if="contents.length == 0">
+						<h3>No Content</h3>
+					</div>
+                    <section ng-if="contents.length > 0" class="col-lg-6 col-md-6 col-sm-6 col-xs-12" ng-repeat="content in contents">
+                        <section class="media">
+                            <section class="media-left media-middle">
+                                <img src="{{content.coverImageUrl}}" class="media-object" width="200">
+                            </section>
+                            <section class="media-body media-middle">
+                                <h4 class="media-heading">{{content.title}}</h4>
+                                <p>{{content.content.substr(0,100)}} <a href="javascript:void(0);" ng-click="moveToListing(content)">Read More</a></p>
+                            </section>
+                        </section>
+                    </section>
+
+                   <!-- <section class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <section class="media">
+                            <section class="media-left media-middle">
+                                <img src="app/images/video-img-01.png" class="media-object" width="200">
+                            </section>
+                            <section class="media-body media-middle">
+                                <h4 class="media-heading">Lorem Ipsum</h4>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit... <a href="javascript:void(0);">Read More</a></p>
+                            </section>
+                        </section>
+                    </section>
+
+                    <section class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <section class="media">
+                            <section class="media-left media-middle">
+                                <img src="app/images/video-img-01.png" class="media-object" width="200">
+                            </section>
+                            <section class="media-body media-middle">
+                                <h4 class="media-heading">Lorem Ipsum</h4>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit... <a href="javascript:void(0);">Read More</a></p>
+                            </section>
+                        </section>
+                    </section>
+
+                    <section class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <section class="media">
+                            <section class="media-left media-middle">
+                                <img src="app/images/video-img-01.png" class="media-object" width="200">
+                            </section>
+                            <section class="media-body media-middle">
+                                <h4 class="media-heading">Lorem Ipsum</h4>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit... <a href="javascript:void(0);">Read More</a></p>
+                            </section>
+                        </section>
+                    </section> -->
+                </section>
+            </section>
+        </section>
+    </section>
+</div>

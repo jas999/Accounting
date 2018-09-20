@@ -1,0 +1,138 @@
+<div ng-controller="ProfileController" ng-init="uploadInit()">
+	<div class="banner-images">
+		<img src="app/images/banner-01.png" alt="" class="full-width" />
+		<div class="overlay-banner">
+			<div class="profile-img"><img src="app/images/t1.jpg" alt="" class="img-circle full-width" /></div>
+			<div class="profile-name">{{loggedInUser.firstName}} {{loggedInUser.lastName}}</div>
+			<div class="profile-email"><a href="javascript:void(0);">{{loggedInUser.email}}</a></div>
+		</div>
+	</div>
+	<section class="content-zone white-bg">
+	<div class="container">
+			<h1 class="tittle-w3ls text-center">Main Content</h1><br clear="all" /><br />
+			<div>
+			<div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 myaccount">
+			<div class="row">
+				
+				<div class="col-md-6 col-sm-6 col-xs-12">	
+					<div class="form-group">
+						<label>Select Service</label>
+						<div class="custom-select">
+							<select class="form-control" ng-model="userDocument.serviceSelected">
+								<option value="-1">--Select Service--</option>
+								<option value="accomodation">Accomodation</option>
+								<option value="meals">Meals</option>
+								<option value="jobs">Jobs</option>
+								<option value="coachingAds">Coaching Ads</option>
+								<option value="statutes">Statutes</option>
+								<option value="testSeries">Test Series</option>
+								<option value="others">Others</option>
+							</select>
+						</div>
+					</div>
+				</div>	
+				<div class="col-md-6 col-sm-6 col-xs-12">	
+					
+				</div>
+			</div>
+			<div class="row" ng-if="userDocument.serviceSelected == 'others'">
+				<div class="col-md-6 col-sm-6 col-xs-12">	
+					<div class="form-group">
+						<label>Primary Course</label>
+						<div class="custom-select">
+							<select class="form-control" ng-model="userDocument.categoryId"  ng-change="findSubCategoriesByParentId(userDocument.categoryId)">
+								<option ng-repeat="cat in categories" value="{{cat.profileCategoryId}}">{{cat.name}}</option>
+							</select>
+						</div>
+					</div>
+				</div>	
+				<div class="col-md-6 col-sm-6 col-xs-12">	
+					<div class="form-group">
+						<label>Secondary Course</label>
+						<div class="custom-select">
+							<select class="form-control" ng-model="userDocument.subCategoryId">
+								<option ng-repeat="subCat in subCategories" value="{{subCat.profileCategoryId}}">{{subCat.name}}</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+			 
+			<div class="row" ng-if="userDocument.serviceSelected == 'others'">
+				<div class="col-md-6 col-sm-6 col-xs-12 border-bottom-1">	
+					<label>Content Contains Any Video?</label>
+					 <div class="form-group custom-radio">
+						<label>
+							<input type="radio" name="a" alt="" ng-click="containsVideoFun(true)"/>
+							<span>Yes</span>
+						</label>
+						<label>
+							<input type="radio" name="a" alt=""  ng-click="containsVideoFun(false)" />
+							<span>No</span>
+						</label>
+					</div>
+				</div>
+				
+			</div>
+			<div class="row" ng-if="userDocument.serviceSelected != undefined && userDocument.serviceSelected != '-1'">	
+			<div class="col-md-12 col-sm-12 col-xs-12 border-bottom-1">	
+					<label>City</label>
+				<div class="custom-select">
+							<select class="form-control" multiple required ng-model="userDocument.uploadCityId" style="height: 150px;">
+								<option value="{{city.id}}" ng-repeat="city in cities" ng-selected="showSelectedCityWhileUpload(city,userDocument)">{{city.name}}</option>
+								
+							</select>
+						</div>
+				</div>
+				
+			</div>
+			
+			<div class="row">		
+				<div class="col-md-6 col-sm-6 col-xs-12 border-bottom-1">	
+					<label>Title</label>
+					 <div class="form-group">
+						<input type="text" class="form-control" value="" placeholder="Enter title here" ng-model="userDocument.title"/>
+					</div>
+				</div>
+				<div class="col-md-6 col-sm-6 col-xs-12 border-bottom-1" ng-if="userDocument.containsVideo">	
+					<label>Video link</label>
+					 <div class="form-group">
+						<input type="text" class="form-control" value="" placeholder="Enter video link here" ng-model="userDocument.videoLink"/>
+					</div>
+				</div>
+				
+			</div>
+			<div class="row">
+				<div class="col-md-6 col-sm-6 col-xs-12 border-bottom-1">
+					Cover Image :  <input name="coverimage" type="file" onchange="onSelectCoverImage(this)" accept="image/*" image="image" required/>
+					<img id="cover-img-tag" style="max-height: 150px;"/>
+				</div>
+				<div class="col-md-6 col-sm-6 col-xs-12 border-bottom-1" ng-show="userDocument.containsVideo == false">
+					Upload Content :  <input type="file" onchange="onSelectContentFile(this)" required/>
+				</div>
+			</div>
+			<div class="row">		
+				<div class="col-md-12 col-sm-12 col-xs-12 border-bottom-1">	
+					<label>Description</label>
+					 <div class="form-group">
+						<textarea class="form-control" col="" rows="5" placeholder="Enter description" ng-model="userDocument.content"></textarea>
+					</div>
+				</div>
+				 
+				
+			</div>
+			
+			<br clear="all" /><br />
+			
+			<div class="row">		
+				<div class="col-md-12 col-sm-12 col-xs-12 text-center" ng-click="saveFinalDocument(userDocument)">
+					<button class="btn   btn-theme">SUBMIT <i class="fa fa-arrow-right" ></i></button>
+				</div>
+			</div>
+			
+		</div>
+		</div>
+		</div>
+	</section>
+</div>
