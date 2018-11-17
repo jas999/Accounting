@@ -129,10 +129,10 @@
 					</div>
                     <section ng-if="contents.length > 0" class="col-lg-6 col-md-6 col-sm-6 col-xs-12" ng-repeat="content in contents">
                         <section class="media">
-                            <section class="media-left media-middle">
-                                <img src="{{content.coverImageUrl}}" class="media-object" width="200">
+                            <section class="media-left media-middle col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <img src="{{content.coverImageUrl}}" class="media-object width:100%; height:100%">
                             </section>
-                            <section class="media-body media-middle">
+                            <section class="media-body media-middle col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                 <h4 class="media-heading">{{content.title}}</h4>
                                 <p>{{content.content.substr(0,100)}} <a href="javascript:void(0);" ng-click="moveToListing(content)">Read More</a></p>
                             </section>

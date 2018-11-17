@@ -12,8 +12,7 @@ function onSelectBannerImage(input) {
 }
 
 angular.module("accounting").controller('UserController',function($scope, $rootScope,UserService, Facebook) {
-	
-	
+	$scope.display = false;
 	$scope.ngNotLoggedIn = function() {
 		$rootScope.showNavigationLinks = false;
 		$scope.allCities();

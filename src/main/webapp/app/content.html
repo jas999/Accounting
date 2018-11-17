@@ -15,7 +15,7 @@
                     <section class="col-lg-6 col-md-6 col-sm-6 col-xs-12" ng-repeat="content in contents">
                         <section class="media">
                             <section class="media-left">
-                                <img src="{{content.coverImageUrl}}" class="media-object" width="200">
+                                <img src="{{content.coverImageUrl}}" class="media-object" style="width:200px">
                             </section>
                             <section class="media-body">
                                 <h4 class="media-heading">{{content.title}}</h4>
@@ -26,8 +26,8 @@
 									  Launch demo modal
 									</button> -->
                                 	<a class="border-btn" data-toggle="modal" ng-click="openRatingModal(content)">Rate</a>
-                                	<img src="app/images/attachment.png" ng-click="openContentInListPage(content,'attachment')" style="height:30px;margin-left:10px;"/>
-                                    <ul class="share-icons-list">
+                                	<!-- <img src="app/images/attachment.png" ng-click="openContentInListPage(content,'attachment')" style="height:30px;margin-left:10px;"/> -->
+                                    <ul class="share-icons-list" style="float:left">
                                     	<li><a href="javascript:void(0);"><i class="fa fa-share-alt" aria-hidden="true"></i></a></li>
                                         <li><a ng-click="toggleBookmark(content)" href="javascript:void(0);"><i class="fa fa-heart-o" aria-hidden="true"></i></a></li>
                                         <li><a ng-click="openCommentModal()"  href="javascript:void(0);"><i class="fa fa-comment-o" aria-hidden="true"></i></a></li>
